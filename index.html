@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nalle Capital Oy – Vuokra-asunnot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a5f4a;
+            --primary-dark: #134a39;
+            --accent: #c8a97e;
+            --bg: #f8f7f5;
+            --card: #ffffff;
+            --text: #2d2d2d;
+            --text-light: #666666;
+            --border: #e8e6e3;
+            --shadow: 0 4px 24px rgba(0,0,0,0.08);
+            --shadow-lg: 0 12px 40px rgba(0,0,0,0.12);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .logo-text {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .logo-text span {
+            color: var(--primary);
+        }
+
+        nav a {
+            color: var(--text-light);
+            text-decoration: none;
+            margin-left: 2rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        nav a:hover { color: var(--primary); }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 5rem 2rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Section */
+        .section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-subtitle {
+            color: var(--text-light);
+            margin-bottom: 2rem;
+        }
+
+        /* Apartment Card */
+        .apartment-card {
+            background: var(--card);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            margin-bottom: 3rem;
+        }
+
+        .apartment-gallery {
+            position: relative;
+            background: #1a1a1a;
+        }
+
+        .gallery-main {
+            width: 100%;
+            height: 500px;
+            object-fit: contain;
+            display: block;
+            background: #1a1a1a;
+        }
+
+        .gallery-thumbs {
+            display: flex;
+            gap: 8px;
+            padding: 12px;
+            background: #1a1a1a;
+            overflow-x: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #444 #1a1a1a;
+        }
+
+        .gallery-thumbs::-webkit-scrollbar { height: 6px; }
+        .gallery-thumbs::-webkit-scrollbar-track { background: #1a1a1a; }
+        .gallery-thumbs::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
+
+        .gallery-thumbs img {
+            width: 100px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 6px;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 0.2s, transform 0.2s;
+            flex-shrink: 0;
+        }
+
+        .gallery-thumbs img:hover,
+        .gallery-thumbs img.active {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+
+        .gallery-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .gallery-nav:hover { background: rgba(0,0,0,0.7); }
+        .gallery-nav.prev { left: 16px; }
+        .gallery-nav.next { right: 16px; }
+
+        .apartment-info {
+            padding: 2rem;
+        }
+
+        .apartment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .apartment-title h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .apartment-title .address {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .apartment-price {
+            text-align: right;
+        }
+
+        .apartment-price .price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .apartment-price .period {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .apartment-description {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .apartment-description p {
+            margin-bottom: 0.75rem;
+        }
+
+        .apartment-description p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Details Grid */
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: var(--bg);
+            border-radius: 10px;
+        }
+
+        .detail-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            color: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .detail-text .label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .detail-text .value {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        /* Contact */
+        .contact-section {
+            background: var(--primary);
+            color: white;
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .contact-section h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .contact-section p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1.75rem;
+            border-radius: 10px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-primary {
+            background: white;
+            color: var(--primary);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255,255,255,0.4);
+        }
+
+        .btn-outline:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* Company Info */
+        .company-section {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 3rem;
+        }
+
+        .company-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .company-item {
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .company-item:last-child {
+            border-bottom: none;
+        }
+
+        .company-item .label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+        }
+
+        .company-item .value {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--text);
+            color: rgba(255,255,255,0.7);
+            padding: 2rem;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .gallery-main { height: 300px; }
+            .apartment-header { flex-direction: column; }
+            .apartment-price { text-align: left; }
+            .contact-section { flex-direction: column; text-align: center; }
+            .header-inner { padding: 1rem; }
+            nav a { margin-left: 1rem; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-inner">
+        <a href="#" class="logo">
+            <div class="logo-icon">N</div>
+            <div class="logo-text">Nalle <span>Capital</span> Oy</div>
+        </a>
+        <nav>
+            <a href="#asunnot">Asunnot</a>
+            <a href="#yhteystiedot">Yhteystiedot</a>
+        </nav>
+    </div>
+</header>
+
+<section class="hero">
+    <h1>Vuokra-asunnot Oulusta</h1>
+    <p>Laadukkaita vuokra-asuntoja perheyrityksenä jo vuodesta 2015. Tutustu tarjontaamme ja ota yhteyttä!</p>
+</section>
+
+<div class="section">
+    <h2 class="section-title" id="asunnot">Vuokrattavana</h2>
+    <p class="section-subtitle">Tutustu vapaisiin asuntoihimme ja ota yhteyttä</p>
+
+    <!-- Apartment 1 -->
+    <div class="apartment-card">
+        <div class="apartment-gallery">
+            <img src="images/apartment1_1.webp" alt="Asunto 1" class="gallery-main" id="mainImage">
+            <button class="gallery-nav prev" onclick="prevImage()">&#10094;</button>
+            <button class="gallery-nav next" onclick="nextImage()">&#10095;</button>
+            <div class="gallery-thumbs" id="thumbs">
+                <img src="images/apartment1_1.webp" alt="" class="active" onclick="setImage(0)">
+                <img src="images/apartment1_2.webp" alt="" onclick="setImage(1)">
+                <img src="images/apartment1_3.webp" alt="" onclick="setImage(2)">
+                <img src="images/apartment1_4.webp" alt="" onclick="setImage(3)">
+                <img src="images/apartment1_5.webp" alt="" onclick="setImage(4)">
+                <img src="images/apartment1_6.webp" alt="" onclick="setImage(5)">
+                <img src="images/apartment1_7.webp" alt="" onclick="setImage(6)">
+                <img src="images/apartment1_8.webp" alt="" onclick="setImage(7)">
+                <img src="images/apartment1_9.webp" alt="" onclick="setImage(8)">
+                <img src="images/apartment1_10.webp" alt="" onclick="setImage(9)">
+                <img src="images/apartment1_11.webp" alt="" onclick="setImage(10)">
+            </div>
+        </div>
+
+        <div class="apartment-info">
+            <div class="apartment-header">
+                <div class="apartment-title">
+                    <h2>Kerrostalo | 1h + kk + kph + ranskalainen parveke</h2>
+                    <p class="address">📍 Kauppalinnankatu 1, Linnanmaa, Oulu</p>
+                </div>
+                <div class="apartment-price">
+                    <div class="price">479 €</div>
+                    <div class="period">/ kk</div>
+                </div>
+            </div>
+
+            <div class="details-grid">
+                <div class="detail-item">
+                    <div class="detail-icon">📐</div>
+                    <div class="detail-text">
+                        <div class="label">Pinta-ala</div>
+                        <div class="value">21,5 m²</div>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-icon">🏢</div>
+                    <div class="detail-text">
+                        <div class="label">Kerros</div>
+                        <div class="value">4 / 5</div>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-icon">📅</div>
+                    <div class="detail-text">
+                        <div class="label">Rakennusvuosi</div>
+                        <div class="value">2017</div>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-icon">🐕</div>
+                    <div class="detail-text">
+                        <div class="label">Lemmikit</div>
+                        <div class="value">Neuvoteltavissa</div>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-icon">🛋️</div>
+                    <div class="detail-text">
+                        <div class="label">Kalustettu</div>
+                        <div class="value">Ei</div>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-icon">🚗</div>
+                    <div class="detail-text">
+                        <div class="label">Autopaikka</div>
+                        <div class="value">40 €/kk</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="apartment-description">
+                <p><strong>Linnanmaan korkeakoulukampuksen vierestä tarjolla moderni yksiö.</strong> Koulujen lisäksi lähistöltä löytyy mm. Teknologiakylän yrityskeskittymä, Prisma, sekä loistavat liikuntamahdollisuudet.</p>
+                <p>Ikkunat sekä vaaleat pintamateriaalit ja kalusteet tuovat avaruutta ja luovat asuntoon viihtyisän tunnelman. Lattia on parkettia, seinät vaaleat ja pesuhuone kaakeloitu. Asunto sijaitsee talon neljännessä kerroksessa. Keittiö on koostaan huolimatta täysvarusteltu ja kylpyhuoneessa on tilavaraus pyykinpesukoneelle.</p>
+                <p>Bussit kulkevat Linnanmaalta keskustaan monta kertaa tunnissa, joten myös keskustan kattavat palvelut ovat helposti saavutettavissa. Julkisten yhteyksien lisäksi liikkumaan pääsee näppärästi myös pyörällä.</p>
+                <p>Kiteytettynä Linnanmaa tarjoaa viihtyisää ja rauhallista asumista sekä arjen helppoutta.</p>
+                <p>Asunto vuokrataan <strong>toistaiseksi voimassaolevalla vuokrasopimuksella</strong> (1 kuukauden irtisanomisaika, ei määräaikaisuuksia). Luottotiedot tarkistetaan.</p>
+                <p>Vuokraan sisältyy <strong>lämmitys ja ilmainen 50M laajakaistayhteys (Elisa)</strong>. Laajakaistan nopeutta on tarvittaessa mahdollista nostaa lisämaksulla.</p>
+                <p>Tarvittaessa mahdollista vuokrata myös autokatospaikka hintaan <strong>40 €/kk</strong>.</p>
+            </div>
+
+            <div class="contact-section" id="yhteystiedot">
+                <div>
+                    <h3>Kiinnostuitko asunnosta?</h3>
+                    <p>Ota yhteyttä ja kerro hieman itsestäsi ja elämäntilanteestasi.</p>
+                </div>
+                <a href="mailto:vuokraus@nallecapital.fi" class="btn btn-primary">📧 Ota yhteyttä</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Company Info -->
+    <div class="company-section">
+        <h2 class="section-title">Yritystiedot</h2>
+        <p class="section-subtitle">Nalle Capital Oy on perheyritys, joka tarjoaa laadukkaita vuokra-asuntoja</p>
+
+        <div class="company-grid">
+            <div class="company-item">
+                <div class="label">Yrityksen nimi</div>
+                <div class="value">Nalle Capital Oy</div>
+            </div>
+            <div class="company-item">
+                <div class="label">Y-tunnus</div>
+                <div class="value">0111027-9</div>
+            </div>
+            <div class="company-item">
+                <div class="label">Toimiala</div>
+                <div class="value">Vuokra-asuntojen hallinta ja vuokraus</div>
+            </div>
+            <div class="company-item">
+                <div class="label">Asuntojen määrä</div>
+                <div class="value">5 vuokra-asuntoa</div>
+            </div>
+            <div class="company-item">
+                <div class="label">Sijainti</div>
+                <div class="value">Oulu, Suomi</div>
+            </div>
+            <div class="company-item">
+                <div class="label">Sähköposti</div>
+                <div class="value"><a href="mailto:vuokraus@nallecapital.fi">vuokraus@nallecapital.fi</a></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>© 2025 Nalle Capital Oy | Y-tunnus: 0111027-9 | <a href="mailto:vuokraus@nallecapital.fi">vuokraus@nallecapital.fi</a></p>
+</footer>
+
+<script>
+    const images = [
+        'images/apartment1_1.webp',
+        'images/apartment1_2.webp',
+        'images/apartment1_3.webp',
+        'images/apartment1_4.webp',
+        'images/apartment1_5.webp',
+        'images/apartment1_6.webp',
+        'images/apartment1_7.webp',
+        'images/apartment1_8.webp',
+        'images/apartment1_9.webp',
+        'images/apartment1_10.webp',
+        'images/apartment1_11.webp'
+    ];
+
+    let currentIndex = 0;
+    const mainImage = document.getElementById('mainImage');
+    const thumbs = document.querySelectorAll('.gallery-thumbs img');
+
+    function setImage(index) {
+        currentIndex = index;
+        mainImage.src = images[index];
+        thumbs.forEach((thumb, i) => {
+            thumb.classList.toggle('active', i === index);
+        });
+    }
+
+    function nextImage() {
+        setImage((currentIndex + 1) % images.length);
+    }
+
+    function prevImage() {
+        setImage((currentIndex - 1 + images.length) % images.length);
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextImage();
+        if (e.key === 'ArrowLeft') prevImage();
+    });
+</script>
+
+</body>
+</html>
